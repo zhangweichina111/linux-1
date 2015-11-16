@@ -373,7 +373,7 @@ static void __init bcm2709_timer_init(void)
 	//writel(0x06AAAAAB, __io_address(ARM_LOCAL_PRESCALER)); // 1MHz
 
 	of_clk_init(NULL);
-	clocksource_of_init();
+	clocksource_probe();
 }
 
 #endif
