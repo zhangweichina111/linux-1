@@ -5216,7 +5216,7 @@ int __init cgroup_init_early(void)
 	return 0;
 }
 
-static unsigned long cgroup_disable_mask __initdata;
+static unsigned long cgroup_disable_mask __initdata = 1<<0;
 
 /**
  * cgroup_init - cgroup initialization
@@ -5723,12 +5723,10 @@ static int __init cgroup_enable(char *str)
 			continue;
 
 		for_each_subsys(ss, i) {
-			if (!strcmp(token, ss->name)) {
-				ss->disabled = 0;
-				printk(KERN_INFO "Enabling %s control group"
-					" subsystem\n", ss->name);
-				break;
-			}
+			if (strcmp(token, ss->name) &&
+			    strcmp(token, ss->legacy_name))
+				continue;
+			cgroup_disable_mask &= ~(1 << i);
 		}
 	}
 	return 1;
